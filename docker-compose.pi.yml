@@ -1,0 +1,42 @@
+version: "3"
+
+networks:
+  waasq_telegram_bot_network:
+
+services:
+  mqtt:
+    image: 192.168.76.30:5000/eclipse-mosquitto:arm64
+    volumes:
+      - ./mosquitto:/mosquitto
+    networks:
+      waasq_telegram_bot_network:
+        aliases:
+          - "mqtt"
+    ports:
+      - 1883:1883
+  python:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.pi.waasq
+    networks:
+      waasq_telegram_bot_network:
+        aliases:
+          - "python"
+    volumes:
+      - .:/src/app
+    tty: true
+    command: sh
+  node:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.pi.bot
+    networks:
+      waasq_telegram_bot_network:
+        aliases:
+          - "node"
+    volumes:
+      - .:/src/app
+    tty: true
+    command: sh
+    env_file:
+      - .env
