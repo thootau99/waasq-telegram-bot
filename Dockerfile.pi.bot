@@ -8,4 +8,4 @@ COPY bot.js .
 
 RUN npm install
 
-CMD ["node" "bot.js"]
+CMD ["node", "bot.js"]

@@ -7,4 +7,4 @@ COPY mqtt.py .
 
 RUN pip install -r requirements.txt
 
-CMD ["python" "mqtt.py"]
+CMD ["python", "mqtt.py"]

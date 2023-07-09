@@ -33,10 +33,10 @@ class MqttClient:
   # 當地端程式連線伺服器得到回應時，要做的動作
   def on_connect(self, client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
-    client.subscribe("manual_feed")
+    client.subscribe("feed")
 
   def on_message(self, client, userdata, msg):
-    if msg.topic == 'manual_feed':
+    if msg.topic == 'feed':
       feed_count = msg.payload.decode('utf-8')
       self.machine.manual_feed(int(feed_count))
 
