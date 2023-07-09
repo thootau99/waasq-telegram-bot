@@ -23,10 +23,8 @@ services:
       waasq_telegram_bot_network:
         aliases:
           - "python"
-    volumes:
-      - .:/src/app
-    tty: true
-    command: sh
+    env_file:
+      - .env
   node:
     build:
       context: .
@@ -36,9 +34,5 @@ services:
       waasq_telegram_bot_network:
         aliases:
           - "node"
-    volumes:
-      - .:/src/app
-    tty: true
-    command: sh
     env_file:
       - .env
