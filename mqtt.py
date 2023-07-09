@@ -1,11 +1,15 @@
 import waasq
+import atexit
 import paho.mqtt.client as mqtt
 import threading
 import time
 import os
 
 
+def exit_handler():
+  os._exit(1)
 
+atexit.register(exit_handler)
 class MqttClient:
 
   def __init__(self, dev_id, address, local_key, version):
