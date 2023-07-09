@@ -18,6 +18,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile.pi.waasq
+    restart: always
     networks:
       waasq_telegram_bot_network:
         aliases:
@@ -30,6 +31,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile.pi.bot
+    restart: always
     networks:
       waasq_telegram_bot_network:
         aliases:
