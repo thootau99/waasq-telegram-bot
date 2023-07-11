@@ -2,6 +2,8 @@ import TelegramBot from 'node-telegram-bot-api'
 import * as mqtt from 'mqtt'
 
 const token = process.env.TELEGRAM_BOT_KEY ?? ''
+const allowChatId = process.env.ALLOW_CHAT_ID ?? ''
+
 const bot = new TelegramBot(token, { polling: true })
 
 const client = mqtt.connect("mqtt://mqtt");
@@ -46,21 +48,26 @@ bot.setMyCommands([
 
 bot.onText(/^\/manual_feed/, async (msg) => {
   const chatId = msg.chat.id
-  let feedCount
-  try {
-    const { groups: { limitCount } } = /\/manual_feed (?<limitCount>[^ $]*)/.exec(msg.text)
-    feedCount = parseInt(limitCount)
-  } catch {
-    feedCount = 1
-  }
+  const allow = allowChatId.split(',').find(chatIdInString => parseInt(chatIdInString) === chatId) !== undefined
+  if (allow) {
+    let feedCount
+    try {
+      const { groups: { limitCount } } = /\/manual_feed (?<limitCount>[^ $]*)/.exec(msg.text)
+      feedCount = parseInt(limitCount)
+    } catch {
+      feedCount = 1
+    }
 
-    client.publish("feed", feedCount.toString(), { qos: 1 }, (err) => {
-    console.log(err)
-  })
-  await bot.sendMessage(msg.chat.id, "ok")
+      client.publish("feed", feedCount.toString(), { qos: 1 }, (err) => {
+      console.log(err)
+    })
+    await bot.sendMessage(msg.chat.id, "ok")
+  }
 })
 
 bot.onText(/^\/get_status/, async (msg) => {
   const chatId = msg.chat.id
-  await bot.sendMessage(msg.chat.id, JSON.stringify(status))
+  const allow = allowChatId.split(',').find(chatIdInString => parseInt(chatIdInString) === chatId) !== undefined
+  if (allow)
+    await bot.sendMessage(msg.chat.id, JSON.stringify(status))
 })

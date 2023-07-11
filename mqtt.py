@@ -41,7 +41,12 @@ class MqttClient:
 
   def on_message(self, client, userdata, msg):
     if msg.topic == 'feed':
-      feed_count = msg.payload.decode('utf-8')
+      feed_count = 1
+      try:
+        feed_count = msg.payload.decode('utf-8')
+      except:
+        pass
+      
       self.machine.manual_feed(int(feed_count))
 
 
