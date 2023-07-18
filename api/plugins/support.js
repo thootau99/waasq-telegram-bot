@@ -1,5 +1,6 @@
 import fp from 'fastify-plugin';
 import * as mqtt from 'mqtt';
+import * as fs from 'fs';
 
 // the use of fastify-plugin is required to be able
 // to export the decorators to the outer scope
@@ -11,6 +12,8 @@ export default fp(async (fastify) => {
     fastify.addHook('onClose', () => {
       client.end();
     });
+
+    let status = {};
 
     client.on('connect', () => {
       console.log('connect to mqtt');
@@ -34,7 +37,7 @@ export default fp(async (fastify) => {
     client.on('message', (topic, message) => {
       // message is Buffer
       if (['manual_feed', 'feed_state', 'battery_percentage', 'power_mode', 'indicator'].indexOf(topic) !== -1) {
-        fastify.decorate(topic, message.toString());
+        status = { ...status, [topic]: message.toString() };
       }
     });
   } else {
