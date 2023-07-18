@@ -58,7 +58,7 @@ bot.onText(/^\/manual_feed/, async (msg) => {
       feedCount = 1
     }
 
-      client.publish("feed", feedCount.toString(), { qos: 1 }, (err) => {
+    client.publish("feed", feedCount.toString(), { qos: 1 }, (err) => {
       console.log(err)
     })
     await bot.sendMessage(msg.chat.id, "ok")

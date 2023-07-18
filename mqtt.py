@@ -31,7 +31,7 @@ class MqttClient:
     while True:
       status_result = self.machine.get_status()
       for key in status_result:
-        self.client.publish(key, status_result[key])
+        self.client.publish(key, status_result[key], 1, True)
       time.sleep(5)
   
   # 當地端程式連線伺服器得到回應時，要做的動作

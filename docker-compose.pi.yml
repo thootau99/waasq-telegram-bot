@@ -36,3 +36,14 @@ services:
           - "node"
     env_file:
       - .env
+  api:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.pi.api
+    restart: always
+    networks:
+      waasq_telegram_bot_network:
+        aliases:
+          - "api"
+    env_file:
+      - .env
