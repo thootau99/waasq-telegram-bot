@@ -23,6 +23,8 @@ services:
       waasq_telegram_bot_network:
         aliases:
           - "python"
+    depends_on:
+      - mqtt
     env_file:
       - .env
   node:
@@ -34,6 +36,8 @@ services:
       waasq_telegram_bot_network:
         aliases:
           - "node"
+    depends_on:
+      - mqtt
     env_file:
       - .env
   api:
@@ -47,5 +51,7 @@ services:
           - "api"
     env_file:
       - .env
+    depends_on:
+      - mqtt
     ports:
       - 30080:3000
