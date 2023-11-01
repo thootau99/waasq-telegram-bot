@@ -25,22 +25,32 @@ client.on("connect", function () {
   client.subscribe("indicator", function (err) {
     console.log(err)
   });
+  client.subscribe("error", function (err) {
+    console.log(err)
+  })
 });
 
-client.on("message", function (topic, message) {
+client.on("message", async function (topic, message) {
   // message is Buffer
   if (["manual_feed", "feed_state", "battery_percentage", "power_mode", "indicator"].indexOf(topic) !== -1) {
     status = { ...status, [topic]: message.toString() }
+  }
+  if (["error"].includes(topic)) {
+    await bot.sendMessage('195154317', message.toString())
+    await bot.sendMessage('1224703857', message.toString())
   }
 });
 
 bot.setMyCommands([
   {
     command: 'manual_feed',
-    description: 'setAuthKey'
+    description: 'manual_feed'
   }, {
     command: 'get_status',
-    description: 'getAuthKey'
+    description: 'get_status'
+  }, {
+    command: 'reconnect',
+    description: 'reconnect'
   },
 ], { scope: { type: 'all_private_chats' }, language_code: 'en' }).then(() => {
   console.log('command set ok')
@@ -70,4 +80,13 @@ bot.onText(/^\/get_status/, async (msg) => {
   const allow = allowChatId.split(',').find(chatIdInString => parseInt(chatIdInString) === chatId) !== undefined
   if (allow)
     await bot.sendMessage(msg.chat.id, JSON.stringify(status))
+})
+
+bot.onText(/^\/reconnect/, async (msg) => {
+  const chatId = msg.chat.id
+  const allow = allowChatId.split(',').find(chatIdInString => parseInt(chatIdInString) === chatId) !== undefined
+  if (allow)
+    client.publish("reconnect", '', { qos: 1 }, (err) => {
+      console.log(err)
+    })
 })

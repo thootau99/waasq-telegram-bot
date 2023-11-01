@@ -13,7 +13,11 @@ atexit.register(exit_handler)
 class MqttClient:
 
   def __init__(self, dev_id, address, local_key, version):
-    self.machine = waasq.Waasq(dev_id=dev_id, address=address, local_key=local_key, version=version)
+    self.dev_id = dev_id
+    self.address = address
+    self.local_key = local_key
+    self.version = version
+    self.connectToWaasq(self.dev_id, self.address, self.local_key, self.version)
     self.start()
     self.client = mqtt.Client()
     self.client.on_connect = self.on_connect
@@ -21,6 +25,10 @@ class MqttClient:
     self.client.connect("mqtt", 1883, 60)
     print('connected to mqtt')
     self.client.loop_forever()
+
+  def connectToWaasq(self):
+    print('reconnect to', self.address)
+    self.machine = waasq.Waasq(dev_id=self.dev_id, address=self.address, local_key=self.local_key, version=self.version)
   
   def start(self):
     thread = threading.Thread(target=self.polling_waasq_data)
@@ -52,6 +60,8 @@ class MqttClient:
         pass
       print(feed_count)
       self.machine.manual_feed(int(feed_count))
+    else if msg.topic == 'reconnect':
+      self.connectToWaasq()
 
 
 

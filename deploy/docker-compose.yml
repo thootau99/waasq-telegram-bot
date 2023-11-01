@@ -17,35 +17,35 @@ services:
   python:
     build:
       context: .
-      dockerfile: ./Dockerfile.pi.waasq
+      dockerfile: Dockerfile.pi.waasq
     restart: always
     networks:
       waasq_telegram_bot_network:
         aliases:
           - "python"
     env_file:
-      - .env
+      - ../.env
   node:
     build:
       context: .
-      dockerfile: ./Dockerfile.pi.bot
+      dockerfile: Dockerfile.pi.bot
     restart: always
     networks:
       waasq_telegram_bot_network:
         aliases:
           - "node"
     env_file:
-      - .env
+      - ../.env
   api:
     build:
       context: .
-      dockerfile: ./Dockerfile.pi.api
+      dockerfile: Dockerfile.pi.api
     restart: always
     networks:
       waasq_telegram_bot_network:
         aliases:
           - "api"
     env_file:
-      - .env
+      - ../.env
     ports:
       - 30080:3000

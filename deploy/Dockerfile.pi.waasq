@@ -1,9 +1,9 @@
 FROM 192.168.76.30:5000/python:arm64
 WORKDIR /src/app
 
-COPY requirements.txt .
-COPY waasq.py .
-COPY mqtt.py .
+COPY ../requirements.txt .
+COPY ../waasq.py .
+COPY ../mqtt.py .
 
 RUN pip install -r requirements.txt
 
