@@ -50,6 +50,7 @@ class MqttClient:
   def on_connect(self, client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
     client.subscribe("feed")
+    client.subscribe("reconnect")
 
   def on_message(self, client, userdata, msg):
     print('received message')
