@@ -39,6 +39,9 @@ class MqttClient:
   def polling_waasq_data(self):
     while True:
       status_result = self.machine.get_status()
+      is_result_empty = not any(status_result)
+      if is_result_empty:
+        self.client.publish('error', 'status_result is empty', 1, True)
       for key in status_result:
         self.client.publish(key, status_result[key], 1, True)
       time.sleep(5)
@@ -60,7 +63,7 @@ class MqttClient:
         pass
       print(feed_count)
       self.machine.manual_feed(int(feed_count))
-    else if msg.topic == 'reconnect':
+    elif msg.topic == 'reconnect':
       self.connectToWaasq()
 
 
