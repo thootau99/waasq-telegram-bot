@@ -47,3 +47,5 @@ services:
           - "api"
     env_file:
       - .env
+    ports:
+      - 30080:3000

@@ -19,6 +19,7 @@ class MqttClient:
     self.client.on_connect = self.on_connect
     self.client.on_message = self.on_message
     self.client.connect("mqtt", 1883, 60)
+    print('connected to mqtt')
     self.client.loop_forever()
   
   def start(self):
@@ -40,13 +41,16 @@ class MqttClient:
     client.subscribe("feed")
 
   def on_message(self, client, userdata, msg):
+    print('received message')
+
+    print(msg.topic)
     if msg.topic == 'feed':
       feed_count = 1
       try:
         feed_count = msg.payload.decode('utf-8')
       except:
         pass
-      
+      print(feed_count)
       self.machine.manual_feed(int(feed_count))
 
 

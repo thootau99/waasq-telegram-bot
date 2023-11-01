@@ -4,6 +4,7 @@ import tinytuya
 class Waasq(tinytuya.Device):
   def manual_feed(self, feed_count):
     payload = self.generate_payload(tinytuya.CONTROL, { '3': feed_count })
+    print(payload)
     self._send_receive(payload=payload)
   def get_status(self):
     result = {}
