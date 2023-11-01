@@ -17,7 +17,7 @@ class MqttClient:
     self.address = address
     self.local_key = local_key
     self.version = version
-    self.connectToWaasq(self.dev_id, self.address, self.local_key, self.version)
+    self.connectToWaasq()
     self.start()
     self.client = mqtt.Client()
     self.client.on_connect = self.on_connect
