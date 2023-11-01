@@ -16,7 +16,7 @@ services:
       - 1883:1883
   python:
     build:
-      context: .
+      context: deploy
       dockerfile: Dockerfile.pi.waasq
     restart: always
     networks:
@@ -24,10 +24,10 @@ services:
         aliases:
           - "python"
     env_file:
-      - ../.env
+      - .env
   node:
     build:
-      context: .
+      context: deploy
       dockerfile: Dockerfile.pi.bot
     restart: always
     networks:
@@ -35,10 +35,10 @@ services:
         aliases:
           - "node"
     env_file:
-      - ../.env
+      - .env
   api:
     build:
-      context: .
+      context: deploy
       dockerfile: Dockerfile.pi.api
     restart: always
     networks:
@@ -46,6 +46,6 @@ services:
         aliases:
           - "api"
     env_file:
-      - ../.env
+      - .env
     ports:
       - 30080:3000

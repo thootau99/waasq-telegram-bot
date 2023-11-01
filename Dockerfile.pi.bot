@@ -2,8 +2,10 @@ FROM 192.168.76.30:5000/node:18-alpine-arm64
 
 WORKDIR /src/app
 
-COPY ../api/ .
+COPY package-lock.json .
+COPY package.json .
+COPY bot.js .
 
 RUN npm install
 
-CMD ["npm", "run", "dev"]
+CMD ["node", "bot.js"]
