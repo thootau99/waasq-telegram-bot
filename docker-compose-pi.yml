@@ -8,6 +8,7 @@ services:
     image: 192.168.76.30:5000/eclipse-mosquitto:arm64
     volumes:
       - ./mosquitto:/mosquitto
+    restart: always
     networks:
       waasq_telegram_bot_network:
         aliases:
