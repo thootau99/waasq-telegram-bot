@@ -5,6 +5,7 @@ WORKDIR /src/app
 COPY package-lock.json .
 COPY package.json .
 COPY bot.js .
+COPY machine-reader.js .
 COPY devices.json .
 
 RUN npm install
