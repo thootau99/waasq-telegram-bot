@@ -1,5 +1,5 @@
 import waasq
-import mongo
+import machine_reader
 import atexit
 import paho.mqtt.client as mqtt
 import threading
@@ -68,8 +68,8 @@ class MqttClient:
       self.connectToWaasq()
 
 
-mongo = mongo.MongoClientForWaasqDb()
-machines = mongo.get_all_machines()
+_machine_reader = machine_reader.MachineReader()
+machines = _machine_reader.get_all_machines()
 mqtt_for_machines = []
 for machine in machines:
   print(machine)

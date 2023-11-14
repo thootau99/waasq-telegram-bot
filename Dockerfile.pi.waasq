@@ -4,6 +4,9 @@ WORKDIR /src/app
 COPY requirements.txt .
 COPY waasq.py .
 COPY mqtt.py .
+COPY mongo.py .
+COPY devices.json .
+
 
 RUN pip install -r requirements.txt
 

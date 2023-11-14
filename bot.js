@@ -1,6 +1,6 @@
 import TelegramBot from 'node-telegram-bot-api'
 import * as mqtt from 'mqtt'
-import { Mongo } from './mongo'
+import { MachineReader } from './machine-reader.js'
 
 const token = process.env.TELEGRAM_BOT_KEY ?? ''
 const allowChatId = process.env.ALLOW_CHAT_ID ?? ''
@@ -12,11 +12,10 @@ let status = {}
 
 client.on("connect", async function () {
 
-  const mongo = new Mongo();
-  await mongo.start()
+  const machineReader = new MachineReader();
 
 
-  const machines = await mongo.getAllMachines()
+  const machines = await machineReader.getAllMachines()
   machines.forEach(machine => {
     client.subscribe(`${machine['address']}/+`)
   })
