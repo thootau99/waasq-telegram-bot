@@ -3,3 +3,6 @@ __pycache__
 .vscode
 mosquitto/
 node_modules
+
+db
+.idea

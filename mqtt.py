@@ -1,4 +1,5 @@
 import waasq
+import mongo
 import atexit
 import paho.mqtt.client as mqtt
 import threading
@@ -41,22 +42,21 @@ class MqttClient:
       status_result = self.machine.get_status()
       is_result_empty = not any(status_result)
       if is_result_empty:
-        self.client.publish('error', 'status_result is empty', 1, True)
+        self.client.publish( self.address + '/error', 'status_result is empty', 1, True)
       for key in status_result:
-        self.client.publish(key, status_result[key], 1, True)
+        self.client.publish( self.address + '/' + key, status_result[key], 1, True)
       time.sleep(5)
   
-  # 當地端程式連線伺服器得到回應時，要做的動作
   def on_connect(self, client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
-    client.subscribe("feed")
-    client.subscribe("reconnect")
+    client.subscribe( self.address + "/feed")
+    client.subscribe( self.address + "/reconnect")
 
   def on_message(self, client, userdata, msg):
     print('received message')
 
     print(msg.topic)
-    if msg.topic == 'feed':
+    if msg.topic == self.address + '/feed':
       feed_count = 1
       try:
         feed_count = msg.payload.decode('utf-8')
@@ -64,16 +64,13 @@ class MqttClient:
         pass
       print(feed_count)
       self.machine.manual_feed(int(feed_count))
-    elif msg.topic == 'reconnect':
+    elif msg.topic == self.address + '/reconnect':
       self.connectToWaasq()
 
 
-
-dev_id = os.environ.get("WAASQ_DEV_ID")
-address = os.environ.get("WAASQ_ADDRESS")
-local_key = os.environ.get("WAASQ_LOCAL_KEY")
-version = os.environ.get("WAASQ_VERSION")
-
-
-m = MqttClient(dev_id=dev_id, address=address, local_key=local_key, version=version)
-m.polling_waasq_data()
+mongo = mongo.MongoClientForWaasqDb()
+machines = mongo.get_all_machines()
+mqtt_for_machines = []
+for machine in machines:
+  print(machine)
+  mqtt_for_machines.append(MqttClient(dev_id=machine['dev_id'], address=machine['address'], local_key=machine['local_key'], version=machine['version']))
