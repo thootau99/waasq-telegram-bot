@@ -19,13 +19,14 @@ class MqttClient:
     self.local_key = local_key
     self.version = version
     self.connectToWaasq()
-    self.start()
+    #self.start()
     self.client = mqtt.Client()
     self.client.on_connect = self.on_connect
     self.client.on_message = self.on_message
     self.client.connect("mqtt", 1883, 60)
     print('connected to mqtt')
-    self.client.loop_forever()
+    self.start()
+    #self.client.loop_forever()
 
   def connectToWaasq(self):
     print('reconnect to', self.address)
@@ -34,6 +35,8 @@ class MqttClient:
   def start(self):
     thread = threading.Thread(target=self.polling_waasq_data)
     thread.start()
+    threadLoopForever = threading.Thread(target=self.client.loop_forever)
+    threadLoopForever.start()
 
     # thread.join()
 

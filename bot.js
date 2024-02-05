@@ -55,18 +55,24 @@ bot.setMyCommands([
 bot.onText(/^\/manual_feed/, async (msg) => {
   const chatId = msg.chat.id
   const allow = allowChatId.split(',').find(chatIdInString => parseInt(chatIdInString) === chatId) !== undefined
+  console.log(chatId)
   if (allow) {
     let feedCount
     try {
       const { groups: { address, limitCount } } = /\/manual_feed (?<address>[^ $]*) (?<limitCount>[^ $]*)/.exec(msg.text)
       feedCount = parseInt(limitCount)
-    } catch {
+      client.publish(`${address}/feed`, feedCount.toString(), { qos: 1 }, (err) => {
+        console.log(err)
+      })
+    } catch (e) {
+      console.log(e)
       feedCount = 1
+      //feedCount = parseInt(limitCount)
+      //client.publish(`${address}/feed`, feedCount.toString(), { qos: 1 }, (err) => {
+        //console.log(err)
+       //})
     }
 
-    client.publish(`${address}/feed`, feedCount.toString(), { qos: 1 }, (err) => {
-      console.log(err)
-    })
     await bot.sendMessage(msg.chat.id, "ok")
   }
 })
