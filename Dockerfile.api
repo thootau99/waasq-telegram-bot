@@ -1,4 +1,4 @@
-FROM 192.168.76.30:5000/node:18-alpine-arm64
+FROM node:18
 
 WORKDIR /src/app
 
