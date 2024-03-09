@@ -29,11 +29,13 @@ client.on("message", async function (topic, message) {
       status[address] = {}
     }
     status = { ...status, address: { ...status['address'], [_topic]: message.toString() } }
-
-    if (_topic.includes('error')) {
-      await bot.sendMessage('195154317', message.toString())
-      await bot.sendMessage('1224703857', message.toString())
-    }
+    return
+  }
+  if (_topic.includes('error') || _topic.includes('feed')) {
+    const notificationUsers = process.env.NOTIFICATION_USERS;
+    await Promise.all(notificationUsers.split('/').map(async user => {
+      await bot.sendMessage(user, `${_topic}: ${message.toString()}`)
+    }))
   }
 });
 
@@ -73,7 +75,7 @@ bot.onText(/^\/manual_feed/, async (msg) => {
        //})
     }
 
-    await bot.sendMessage(msg.chat.id, "ok")
+    //await bot.sendMessage(msg.chat.id, "ok")
   }
 })
 
